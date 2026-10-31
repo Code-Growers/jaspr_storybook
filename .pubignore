@@ -1,0 +1,8 @@
+node_modules/
+.dart_tool/
+storybook-static/
+pubspec.lock
+pubspec_overrides.yaml
+*.tgz
+/AGENTS.md
+/bun.lock
