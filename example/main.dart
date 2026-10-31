@@ -1,3 +1,5 @@
+// Browser entrypoint for this example's Storybook preview.
+// From example/: run dart pub get, bun install, then bun run dev.
 import 'package:jaspr/dom.dart';
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr_storybook/jaspr_storybook.dart';

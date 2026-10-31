@@ -1,6 +1,7 @@
 node_modules/
 .dart_tool/
 pubspec.lock
+bun.lock
 pubspec_overrides.yaml
 storybook-static/
 dist/

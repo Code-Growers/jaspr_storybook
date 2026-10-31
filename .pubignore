@@ -5,4 +5,4 @@ pubspec.lock
 pubspec_overrides.yaml
 *.tgz
 /AGENTS.md
-/bun.lock
+bun.lock

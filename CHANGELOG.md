@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1
+
+- Provide the working Storybook demo at `example/main.dart` so pub.dev detects
+  it and displays the Example tab.
+- Add example setup instructions and update its Storybook entrypoint.
+
 ## 1.0.0
 
 - Initial MIT-licensed release of the Jaspr Storybook integration.

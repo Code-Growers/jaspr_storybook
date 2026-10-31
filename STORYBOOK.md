@@ -1,11 +1,11 @@
 # Storybook for Jaspr
 
-Two MIT-licensed packages provide the integration, both at version `1.0.0`:
+Two compatible MIT-licensed packages provide the integration:
 
-| Registry | Package | Source |
-| --- | --- | --- |
-| pub.dev | [`jaspr_storybook`](https://pub.dev/packages/jaspr_storybook) | [Dart runtime](https://github.com/Code-Growers/jaspr_storybook) |
-| npm | [`@codegrowers/storybook-jaspr-vite`](https://www.npmjs.com/package/@codegrowers/storybook-jaspr-vite) | [Storybook framework](https://github.com/Code-Growers/storybook-jaspr-vite) |
+| Registry | Package | Version | Source |
+| --- | --- | --- | --- |
+| pub.dev | [`jaspr_storybook`](https://pub.dev/packages/jaspr_storybook) | `1.0.1` | [Dart runtime](https://github.com/Code-Growers/jaspr_storybook) |
+| npm | [`@codegrowers/storybook-jaspr-vite`](https://www.npmjs.com/package/@codegrowers/storybook-jaspr-vite) | `1.0.0` | [Storybook framework](https://github.com/Code-Growers/storybook-jaspr-vite) |
 
 ## Consumer setup
 
@@ -14,7 +14,7 @@ dependencies and the matching npm framework plus Storybook/Vite to its JavaScrip
 development dependencies. For example, using Bun:
 
 ```sh
-dart pub add --dev jaspr_storybook:^1.0.0
+dart pub add --dev jaspr_storybook:^1.0.1
 bun add --dev @codegrowers/storybook-jaspr-vite@^1.0.0 storybook@10.6.5 vite@8.3.5 @storybook/addon-docs@10.6.5
 ```
 
@@ -138,7 +138,9 @@ explicit source override, the code panel indicates that Dart source is unconfigu
 ## Examples and development
 
 Each repository includes a small `example/` with a button, a controlled switch
-and stateful counters. No backend or application-specific assets are needed.
+and stateful counters. The Dart repository's browser entrypoint is
+[`example/main.dart`](example/main.dart); see its [setup instructions](example/README.md).
+No backend or application-specific assets are needed.
 The example configuration lives in `example/storybook/` so pub.dev includes it;
 consumer applications can use the conventional `.storybook/` directory.
 

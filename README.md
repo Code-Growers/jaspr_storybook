@@ -3,10 +3,10 @@
 Render real Jaspr components in Storybook. This Dart package supplies component
 builders and the browser runtime; the companion npm package
 `@codegrowers/storybook-jaspr-vite` supplies the renderer and Vite integration.
-Both packages are released at `1.0.0`.
+Use `jaspr_storybook` `1.0.1` with the compatible npm framework `1.0.0`.
 
 ```sh
-dart pub add --dev jaspr_storybook:^1.0.0
+dart pub add --dev jaspr_storybook:^1.0.1
 ```
 
 MIT licensed. [Framework source](https://github.com/Code-Growers/storybook-jaspr-vite) · [npm package](https://www.npmjs.com/package/@codegrowers/storybook-jaspr-vite).
@@ -35,7 +35,9 @@ The companion framework compiles this entrypoint with the Dart SDK. Use standard
 TypeScript CSF stories with `component: 'button'`, `args`, and `argTypes`.
 Docs can show actual Dart builders selected with `#docregion` markers, with Dart
 syntax highlighting. See [STORYBOOK.md](STORYBOOK.md) for complete setup and the self-contained
-`example/` directory for a working Dart and Storybook project. The companion framework has its own repository.
+[example/main.dart](example/main.dart) for a working Dart entrypoint and
+[example/README.md](example/README.md) for setup instructions. The companion
+framework has its own repository.
 
 ## Runtime contract
 

@@ -8,7 +8,7 @@ const config: StorybookConfig = {
   framework: {
     name: dirname(require.resolve("@codegrowers/storybook-jaspr-vite/package.json")),
     options: {
-      entrypoint: "../lib/storybook.client.dart",
+      entrypoint: "../main.dart",
       watchPaths: ["../../lib"],
     },
   },
