@@ -18,9 +18,9 @@ dart pub add --dev jaspr_storybook:^1.0.1
 bun add --dev @codegrowers/storybook-jaspr-vite@^1.0.0 storybook@10.6.5 vite@8.3.5 @storybook/addon-docs@10.6.5
 ```
 
-The current tested targets are Jaspr 0.23.3 and 0.23.5, Storybook 10.6.5, Vite
-8.3.5, Bun 1.4.2 and Dart 3.13.5. The Jaspr constraint allows 0.23.x, but other patch versions
-still need compatibility verification before extending the advertised matrix.
+The current tested targets are Jaspr 0.24.0-beta.0, Storybook 10.6.5, Vite
+8.3.5, Bun 1.4.2 and Dart 3.13.5. The Jaspr constraint allows the 0.24 line; Jaspr 0.23
+applications keep using jaspr_storybook 1.0.x.
 Node support has not been verified; the development and release scripts use Bun.
 
 Register components in a Dart client entrypoint as shown in README.md. Configure
@@ -85,7 +85,12 @@ No remote Dart or Jaspr server is required to view a built Storybook.
 - Inline Docs can mount multiple independent previews. Use `story.instanceId`
   when assigning DOM ids.
 - Story teardown disposes the Jaspr tree and removes the renderer-owned DOM.
-  Builder errors reject rendering so Storybook can show its error UI.
+  Each story renders into its own `display: contents` wrapper inside the host,
+  attached to a single hidden Jaspr root, because Jaspr 0.24 allows only one
+  client binding per page.
+- Errors thrown by a story builder reject rendering so Storybook can show its error UI.
+  Errors in nested components render Jaspr's inline error fallback and are logged
+  to the browser console, since the shared binding reports them globally.
 - Play functions run after the Dart mount/update promise completes. They are
   authored in TypeScript against the preview's regular DOM.
 - Changes to Dart files under the entrypoint directory or `watchPaths` trigger

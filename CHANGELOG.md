@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.1.0-beta.0
+
+- Require Jaspr 0.24.0-beta.0 or later in the 0.24 line and Dart 3.13.
+  Jaspr 0.23 applications keep using 1.0.x.
+- Mount every story through the shared `ClientAppBinding` singleton: one hidden
+  root renders each story into a `display: contents` wrapper in its host through
+  a `ChildSlot`, replacing the per-story binding subclass that Jaspr 0.24 no longer allows.
+- Story builder errors still reject mounting and updates. Errors in nested
+  components now render Jaspr's inline fallback and are logged to the console
+  instead of reaching Storybook's error overlay.
+- Remounting into the same host immediately after teardown renders a fresh tree.
+
 ## 1.0.1
 
 - Provide the working Storybook demo at `example/main.dart` so pub.dev detects

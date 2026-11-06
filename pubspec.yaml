@@ -1,6 +1,6 @@
 name: jaspr_storybook
 description: Render real Jaspr components in Storybook with live arguments, actions, and isolated component lifecycles.
-version: 1.0.1
+version: 1.1.0-beta.0
 homepage: https://github.com/Code-Growers/jaspr_storybook
 repository: https://github.com/Code-Growers/jaspr_storybook
 issue_tracker: https://github.com/Code-Growers/jaspr_storybook/issues
@@ -13,10 +13,10 @@ platforms:
   web:
 
 environment:
-  sdk: '>=3.10.1 <4.0.0'
+  sdk: ^3.13.0
 
 dependencies:
-  jaspr: '>=0.23.3 <0.24.0'
+  jaspr: '>=0.24.0-beta.0 <0.25.0'
   web: ^1.1.1
 
 dev_dependencies:

@@ -67,6 +67,8 @@ class _Runtime {
 
   final Map<String, StorybookBuilder> builders;
   final sessions = <String, _Session>{};
+  final _mounted = ValueNotifier<List<_Session>>(const []);
+  bool _attached = false;
 
   JSPromise<JSAny?> mount(
     JSString instance,
@@ -99,22 +101,23 @@ class _Runtime {
     if (target == null) {
       throw StateError('Story host "$hostId" is not attached to the document.');
     }
+    final container = web.document.createElement('div') as web.HTMLElement
+      ..setAttribute('data-jaspr-story', instanceId)
+      ..style.display = 'contents';
+    target.appendChild(container);
     final session = _Session(
       storyId: storyId,
       instanceId: instanceId,
       builder: builder,
+      container: container,
       args: _decodeRecord(args),
       globals: _decodeRecord(globals),
       emit: emit,
     );
     sessions[instanceId] = session;
-    final binding = _StoryBinding(session);
-    session.binding = binding;
+    _mounted.value = [..._mounted.value, session];
+    _attachHub();
     try {
-      binding.attachRootComponent(
-        _StoryRoot(session),
-        attachTo: '#${web.CSS.escape(hostId)}',
-      );
       await Future<void>.microtask(() {});
       session.throwBuildError();
       session.rendering = false;
@@ -123,6 +126,19 @@ class _Runtime {
       rethrow;
     }
     return null;
+  }
+
+  void _attachHub() {
+    if (_attached) return;
+    _attached = true;
+    final root = web.document.createElement('div') as web.HTMLElement
+      ..id = _hubRootId
+      ..hidden = true.toJS;
+    web.document.body!.appendChild(root);
+    ClientAppBinding.ensureInitialized().attachRootComponent(
+      _StoryHub(_mounted),
+      attachTo: '#$_hubRootId',
+    );
   }
 
   JSPromise<JSAny?> update(JSString instance, JSAny? args, JSAny? globals) =>
@@ -148,10 +164,16 @@ class _Runtime {
     final session = sessions.remove(instance.toDart);
     if (session == null) return;
     session.disposed = true;
-    session.binding?.detachRootComponent();
     session.rebuild = null;
+    _mounted.value = [
+      for (final mounted in _mounted.value)
+        if (mounted != session) mounted,
+    ];
+    Future<void>.microtask(() => session.container.remove());
   }
 }
+
+const _hubRootId = 'jaspr-storybook-root';
 
 Map<String, Object?> _decodeRecord(JSAny? value) {
   final decoded = value.dartify();
@@ -166,6 +188,7 @@ class _Session {
     required this.storyId,
     required this.instanceId,
     required this.builder,
+    required this.container,
     required this.args,
     required this.globals,
     required this.emit,
@@ -174,10 +197,10 @@ class _Session {
   final String storyId;
   final String instanceId;
   final StorybookBuilder builder;
+  final web.HTMLElement container;
   final JSFunction emit;
   Map<String, Object?> args;
   Map<String, Object?> globals;
-  _StoryBinding? binding;
   void Function()? rebuild;
   bool disposed = false;
   bool rendering = true;
@@ -186,6 +209,16 @@ class _Session {
   void send(String type, Object? payload) {
     if (!disposed) {
       emit.callAsFunction(null, type.toJS, payload.jsify());
+    }
+  }
+
+  void reportBuildError(Object error, StackTrace stackTrace) {
+    buildError = (error, stackTrace);
+    if (!rendering) {
+      send('error', {
+        'message': error.toString(),
+        'stack': stackTrace.toString(),
+      });
     }
   }
 
@@ -205,20 +238,40 @@ class _Session {
   );
 }
 
-class _StoryBinding extends ClientAppBinding {
-  _StoryBinding(this.session);
-  final _Session session;
+class _StoryHub extends StatelessComponent {
+  const _StoryHub(this.mounted);
+  final ValueListenable<List<_Session>> mounted;
 
   @override
-  void reportBuildError(Element element, Object error, StackTrace stackTrace) {
-    session.buildError = (error, stackTrace);
-    if (!session.rendering) {
-      session.send('error', {
-        'message': error.toString(),
-        'stack': stackTrace.toString(),
-      });
-    }
-  }
+  Component build(BuildContext context) => ListenableBuilder(
+    listenable: mounted,
+    builder: (context) => SlottedChildView(
+      slots: [
+        for (final session in mounted.value)
+          _StorySlot(
+            session.container,
+            key: ValueKey(session),
+            child: _StoryRoot(session),
+          ),
+      ],
+    ),
+  );
+}
+
+class _StorySlot extends ChildSlot {
+  const _StorySlot(this.container, {required this.child, super.key});
+
+  final web.HTMLElement container;
+  @override
+  final Component child;
+
+  @override
+  ChildSlotRenderObject createRenderObject(SlottedDomRenderObject parent) =>
+      ChildSlotRenderObject(container, parent);
+
+  @override
+  bool canUpdate(ChildSlot oldComponent) =>
+      oldComponent is _StorySlot && oldComponent.container == container;
 }
 
 class _StoryRoot extends StatefulComponent {
@@ -237,6 +290,13 @@ class _StoryRootState extends State<_StoryRoot> {
   }
 
   @override
-  Component build(BuildContext context) =>
-      component.session.builder(component.session.context);
+  Component build(BuildContext context) {
+    final session = component.session;
+    try {
+      return session.builder(session.context);
+    } catch (error, stackTrace) {
+      session.reportBuildError(error, stackTrace);
+      return const Component.fragment([]);
+    }
+  }
 }

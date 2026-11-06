@@ -15,12 +15,10 @@ class StorybookContext {
     required this.instanceId,
     required Map<String, Object?> args,
     required Map<String, Object?> globals,
-    required void Function(String name, Object? value) onAction,
-    required void Function(Map<String, Object?> patch) onUpdateArgs,
+    required this._onAction,
+    required this._onUpdateArgs,
   }) : args = Map.unmodifiable(args),
-       globals = Map.unmodifiable(globals),
-       _onAction = onAction,
-       _onUpdateArgs = onUpdateArgs;
+       globals = Map.unmodifiable(globals);
 
   /// The key registered with [registerStorybook].
   final String storyId;
