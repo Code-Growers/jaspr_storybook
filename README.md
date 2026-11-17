@@ -3,10 +3,11 @@
 Render real Jaspr components in Storybook. This Dart package supplies component
 builders and the browser runtime; the companion npm package
 `@codegrowers/storybook-jaspr-vite` supplies the renderer and Vite integration.
-Use `jaspr_storybook` `1.0.1` with the compatible npm framework `1.0.0`.
+Use `jaspr_storybook` `1.1.0-beta.1` with npm framework `2.0.0-beta.0`
+and Storybook `11.0.0-beta.3`.
 
 ```sh
-dart pub add --dev jaspr_storybook:^1.0.1
+dart pub add --dev jaspr_storybook:1.1.0-beta.1
 ```
 
 MIT licensed. [Framework source](https://github.com/Code-Growers/storybook-jaspr-vite) · [npm package](https://www.npmjs.com/package/@codegrowers/storybook-jaspr-vite).
@@ -57,6 +58,12 @@ CSS and fonts belong to the consumer. Import them in `.storybook/preview.ts` or
 use Storybook static assets. This package includes no Electree code, styles,
 assets, services or branding. It previews client-side components; it does not
 run server-only components or verify SSR/hydration behavior.
+
+## Storybook 11 agent tools
+
+The package includes a VM-only Dart API metadata generator and a reusable
+`jaspr-storybook-workflow` skill. See [STORYBOOK.md](STORYBOOK.md) for headless
+documentation, affected-story lookup, component testing and review setup.
 
 ## Development and release
 

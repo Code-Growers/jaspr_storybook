@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0-beta.1
+
+- Add a VM-only metadata generator for resolved Dart APIs, constructor defaults, source mappings and marked examples.
+- Include the installable jaspr-storybook-workflow skill for the Storybook 11 CLI.
+- Document compatibility with npm framework 2.0.0-beta.0; browser protocol remains v1.
+
 ## 1.1.0-beta.0
 
 - Require Jaspr 0.24.0-beta.0 or later in the 0.24 line and Dart 3.13.
